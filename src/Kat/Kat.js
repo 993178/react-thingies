@@ -1,9 +1,16 @@
 import React from 'react';
+import Radium from 'radium';
 import './Kat.css';
 
 const kat = (props) => {
+    const style = {
+        '@media (min-width: 500px)': {
+            width: '450px'
+        }
+    };
+
     return (
-        <div className="Kat">
+        <div className="Kat" style={style} >
             <p onClick={props.klik}>{props.name} is a  neighborhood tomcat and {props.status}.</p>
             {/* ^hier ontvangen we dus een prop met referentie aan een methode, zodat we vanuit deze domme component toch de state in de slimme oudercomponent kunnen veranderen */}
             <p>{props.children}</p>
@@ -13,7 +20,7 @@ const kat = (props) => {
     )   // children is dus de gereserveerde term voor het spul tussen de open- en sluitingstag, niet een prop die we zelf in de tag zelf neerplempen. Dat spul kan van alles zijn, ook een andere Reactcomponent
 };
 
-export default kat;
+export default Radium(kat);
 
 // dit is een stateless component, ofwel dumb component, ofwel functional component, ofwel presentational component, 'zonder interne logica' (terwijl het dus een functie is hè!)
 // je wilt dat zoveel mogelijk components dumb zijn
