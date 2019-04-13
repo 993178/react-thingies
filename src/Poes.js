@@ -2,7 +2,6 @@
 // van deze components wil je er zo min mogelijk
 
 import React, { Component } from 'react';
-import Radium, { StyleRoot } from 'radium';
 import './Poes.css';
 import Kat from './Kat/Kat'; // namen van componenten etc altijd met hoofdletter, kleine letters zijn voor de html-elementen
 
@@ -58,10 +57,6 @@ class Poes extends Component {
       border: '1px solid black',
       padding: '8px',
       cursor: 'pointer',
-      ':hover': {       // dankzij Radium kunnen we nu ook pseudo-selectors op een inline manier aanpassen (anders zorgt de : voor problemen)(alsof hover ook nog iets anders is in css, zonder :...)
-        backgroundColor: 'lightgreen',
-        color: 'black'
-      }
     }
 
     let cats = null;    // optie 2 van conditionele elementen: je maakt een variabele die je rendert, en verandert die hier evt met een if
@@ -79,10 +74,6 @@ class Poes extends Component {
         </div>
       );
       style.backgroundColor = 'red';
-      style[':hover'] = {
-        backgroundColor: 'lightcoral',
-        color: 'black'
-      }
     }
 
     let classes = []    // join (verplaatst naar de h1 in de return) plakt de strings aan elkaar tot 1 string met (in dit geval) een spatie ertussen
@@ -93,24 +84,57 @@ class Poes extends Component {
       classes.push('big');
     }
 
-    return (        // wrap your root/app in StyleRoot, anders werken de inline media queries niet en stel je vóór dat je die netjes en overzichtelijk in een separated of concerns css-bestand moet zetten
-      <StyleRoot>
+    return (
         <div className="Poes">
           <h1 className={classes.join(' ')} >Pretend this is the yard...</h1>
           <button style={style} onClick={this.toggleCatHandler}>To cat or not to cat</button>
           {cats}
         </div>
-      </StyleRoot>
     );
   }
 }
 
-export default Radium(Poes);
+export default Poes;
 
 
 
 
 // even uit de weg parkeren:
+
+// import Radium, { StyleRoot } from 'radium';
+// in const style:
+// ':hover': {       // dankzij Radium kunnen we nu ook pseudo-selectors op een inline manier aanpassen (anders zorgt de : voor problemen)(alsof hover ook nog iets anders is in css, zonder :...)
+//   backgroundColor: 'lightgreen',
+//   color: 'black'
+// }
+// // onder baccol red voor de voorwaardelijke opmaak vd button
+// style[':hover'] = {
+//   backgroundColor: 'lightcoral',
+//   color: 'black'
+// }
+
+
+
+// return (        // wrap your root/app in StyleRoot, anders werken de inline media queries niet en stel je vóór dat je die netjes en overzichtelijk in een separated of concerns css-bestand moet zetten
+//   <StyleRoot>
+//     <div className="Poes">
+//       <h1 className={classes.join(' ')} >Pretend this is the yard...</h1>
+//       <button style={style} onClick={this.toggleCatHandler}>To cat or not to cat</button>
+//       {cats}
+//     </div>
+//   </StyleRoot>
+// );
+// }
+// }
+
+// export default Radium(Poes);
+
+
+
+
+
+
+/////////////////////////
 
 // if (this.state.catsAreThere) {    // optie 2 conditioneel renderen
 //   cats = (
