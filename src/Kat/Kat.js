@@ -1,9 +1,9 @@
 import React from 'react';
-import './Kat.css';
+import cssImports from './Kat.css';     // in webpack.config.js > het was iets met cssReget? en test en webloader geloof ik. En 64.5.
 
 const kat = (props) => {
     return (
-        <div className="Kat">
+        <div className={cssImports.Kat}>
             <p onClick={props.klik}>{props.name} is a  neighborhood tomcat and {props.status}.</p>
             {/* ^hier ontvangen we dus een prop met referentie aan een methode, zodat we vanuit deze domme component toch de state in de slimme oudercomponent kunnen veranderen */}
             <p>{props.children}</p>

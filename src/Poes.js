@@ -2,8 +2,9 @@
 // van deze components wil je er zo min mogelijk
 
 import React, { Component } from 'react';
-import './Poes.css';
+import cssImports from './Poes.css';   // okeeeeej, dus... we hebben css-loader geconfigureerd in webpack.config.js, waardoor elke css-class nu als uniek ding wordt opgeslagen en alleen wordt toegepast op het js-bestand waarin je het importeert. Bij Discount Jonas heet dit classes
 import Kat from './Kat/Kat'; // namen van componenten etc altijd met hoofdletter, kleine letters zijn voor de html-elementen
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 class Poes extends Component {
   state = {
@@ -50,44 +51,38 @@ class Poes extends Component {
   }
 
   render() {
-    const style = {             // inline styling... Blah. Het moet element voor element als je het vaker dan 1x wilt toepassen, het staat hier een beetje een unseparated concern te wezen en je kunt geen :hover etc classes gebruiken. Amateuristisch...
-      backgroundColor: 'green',
-      color: 'lightgrey',
-      font: 'inherit',
-      border: '1px solid black',
-      padding: '8px',
-      cursor: 'pointer',
-    }
-
     let cats = null;    // optie 2 van conditionele elementen: je maakt een variabele die je rendert, en verandert die hier evt met een if
+    let btnClass = '';
 
     if (this.state.catsAreThere) {    // optie 2 conditioneel renderen
       cats = (
         <div>
-          {this.state.cats.map((cat, index) => {
-            return <Kat key={cat.id}
+          {this.state.cats.map((cat, index) => {    // Errorb is een higher order component, maar dat betekent ook dat dit nu het buitenste element is dat de .mapmethode aanpakt van die Kat-elementen, dus moet de id op ErrorB en niet meer op Kat.
+            return <ErrorBoundary key={cat.id}>
+                    <Kat
                       name={cat.name} 
                       status={cat.status} 
                       klik={() => this.shooAwayHandler(index)}
                       tik={(event) => this.typeNameHandler(event, cat.id)}  />
+                   </ ErrorBoundary> // Discount Jonas: gebruik zo'n error boundary voor componenten die met een server communiceren oid, met redelijke kans dat dat niet lukt
           })}
         </div>
       );
-      style.backgroundColor = 'red';
+      btnClass = cssImports.Red;  // cssloader geeft ons een string
     }
 
     let classes = []    // join (verplaatst naar de h1 in de return) plakt de strings aan elkaar tot 1 string met (in dit geval) een spatie ertussen
-    if (this.state.cats.length < 3) {
-      classes.push('paars');
+    if (this.state.cats.length < 3) { // Discount Jonas heeft dit 'classes' veranderd in assignedClasses
+      classes.push(cssImports.paars);
     }
     if (this.state.cats.length < 2) {
-      classes.push('big');
+      classes.push(cssImports.big);
     }
 
     return (
-        <div className="Poes">
+        <div className={cssImports.Poes}>
           <h1 className={classes.join(' ')} >Pretend this is the yard...</h1>
-          <button style={style} onClick={this.toggleCatHandler}>To cat or not to cat</button>
+          <button className={btnClass} onClick={this.toggleCatHandler}>To cat or not to cat</button>
           {cats}
         </div>
     );
