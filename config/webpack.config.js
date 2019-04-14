@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';  // groene errorboodschap: ""'use strict' is unnecessary in modules" FFS
 
 const fs = require('fs');
 const path = require('path');
