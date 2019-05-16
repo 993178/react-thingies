@@ -1,21 +1,31 @@
 //dit is een stateful component, ofwel een smart component, ofwel een container component waarin wel een state zit en interne logica
 // van deze components wil je er zo min mogelijk
 
+// hier ook de creation lifecycle met welke fase wanneer gebeurt
+
 import React, { Component } from 'react';
 import cssImports from './Poes.css';   // okeeeeej, dus... we hebben css-loader geconfigureerd in webpack.config.js, waardoor elke css-class nu als uniek ding wordt opgeslagen en alleen wordt toegepast op het js-bestand waarin je het importeert. Bij Discount Jonas heet dit classes
-import Kat from './Kat/Kat'; // namen van componenten etc altijd met hoofdletter, kleine letters zijn voor de html-elementen
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import Katten from '../components/Katten/Katten'; // namen van componenten etc altijd met hoofdletter, kleine letters zijn voor de html-elementen
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class Poes extends Component {
-  state = {
+  state = {   // in oudere versies moet je eerst een constructor(props) toevoegen met daarin een super(props), en dan this.state = blablabla. Deze directere versie is korter en moderner. Maar constructor is dus de eerste lifecycle stap
     cats: [     // id is hier handmatig toegevoegde onzin; een database geeft al zijn elementen zelf wel een id
       { id: 'uyt', name: 'That black one', status: "is a PITA" },
       { id: 'rfc', name: "That light grey tabby", status: "Emma seems to like him" },
       { id: 'poi', name: "Dikkie Dik", status: "is welcome" }
     ],
     ourCat: { name: 'Emma', status: 'murdered a bird today...'},
-    catsAreThere: false
+    catsAreThere: false,
+    showCockpit: true
   }
+
+  //static getDerivedStateFromProps(state, props) { return state; }     // zeldzame tweede stap in de lifecycle voor het geval je meteen al moet checken of props en state nog uptodate zijn...
+  // componentWillMount             // staat op de nominatie om te verdwijnen
+  // componentDidMount() {}         // vijfde en laatste stap in de lifecycle creation fase, is ook om data van server op te halen
+
+  // shouldComponentUpdate >> update lifecycle    voor de performance
+  // componentDidUpdate >> update lifecycle!      ook voor serverinteractie
 
   switchNameHandler = (newInsult) => {  // nu geven we een parameter mee, die ingevuld wordt bij de 'call' in de button, als tweede argument van de bind-methode
     //niet doen: this.state.cats[0].name = 'That $%#$% black one';
@@ -50,39 +60,24 @@ class Poes extends Component {
     this.setState({cats: cats});
   }
 
-  render() {
+  render() {    // derde lifecycle-stap
     let cats = null;    // optie 2 van conditionele elementen: je maakt een variabele die je rendert, en verandert die hier evt met een if
-    let btnClass = '';
 
     if (this.state.catsAreThere) {    // optie 2 conditioneel renderen
-      cats = (
-        <div>
-          {this.state.cats.map((cat, index) => {    // Errorb is een higher order component, maar dat betekent ook dat dit nu het buitenste element is dat de .mapmethode aanpakt van die Kat-elementen, dus moet de id op ErrorB en niet meer op Kat.
-            return <ErrorBoundary key={cat.id}>
-                    <Kat
-                      name={cat.name} 
-                      status={cat.status} 
-                      klik={() => this.shooAwayHandler(index)}
-                      tik={(event) => this.typeNameHandler(event, cat.id)}  />
-                   </ ErrorBoundary> // Discount Jonas: gebruik zo'n error boundary voor componenten die met een server communiceren oid, met redelijke kans dat dat niet lukt
-          })}
-        </div>
-      );
-      btnClass = cssImports.Red;  // cssloader geeft ons een string
-    }
-
-    let classes = []    // join (verplaatst naar de h1 in de return) plakt de strings aan elkaar tot 1 string met (in dit geval) een spatie ertussen
-    if (this.state.cats.length < 3) { // Discount Jonas heeft dit 'classes' veranderd in assignedClasses
-      classes.push(cssImports.paars);
-    }
-    if (this.state.cats.length < 2) {
-      classes.push(cssImports.big);
+      cats = <Katten 
+            cats={this.state.cats} 
+            shoo={this.shooAwayHandler} 
+            typed={this.typeNameHandler} />;
     }
 
     return (
         <div className={cssImports.Poes}>
-          <h1 className={classes.join(' ')} >Pretend this is the yard...</h1>
-          <button className={btnClass} onClick={this.toggleCatHandler}>To cat or not to cat</button>
+          <button onClick={() => {this.setState({showCockpit: false})}} >Remove cockpit</button> {/* quick and dirty manier om even een functie erin te gooien */}
+          {this.state.showCockpit ? <Cockpit                        // child components renderen is de vierde lifecycle-stap
+            title={this.props.boventitel} // this omdat het een class is, props omdat deze dus bij index.js vandaan komt - weer een niveau hoger!
+            catsAreThere={this.state.catsAreThere} 
+            cats={this.state.cats} 
+            toggleCatHandler={this.toggleCatHandler} /> : null}
           {cats}
         </div>
     );
@@ -219,3 +214,26 @@ export default Poes;
 // }};
 
 // export default poes;
+
+
+// versie met errorboundary: 
+
+// import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+
+// //in render:
+// if (this.state.catsAreThere) {    // optie 2 conditioneel renderen
+//   cats = (
+//     <div>
+//       {this.state.cats.map((cat, index) => {    // Errorb is een higher order component, maar dat betekent ook dat dit nu het buitenste element is dat de .mapmethode aanpakt van die Kat-elementen, dus moet de id op ErrorB en niet meer op Kat.
+//         return <ErrorBoundary key={cat.id}>
+//                 <Kat
+//                   name={cat.name} 
+//                   status={cat.status} 
+//                   klik={() => this.shooAwayHandler(index)}
+//                   tik={(event) => this.typeNameHandler(event, cat.id)}  />
+//                </ ErrorBoundary> // Discount Jonas: gebruik zo'n error boundary voor componenten die met een server communiceren oid, met redelijke kans dat dat niet lukt
+//       })}
+//     </div>
+//   );
+//   btnClass = cssImports.Red;  // cssloader geeft ons een string
+// }

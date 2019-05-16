@@ -1,0 +1,28 @@
+.paars {
+    color: blueviolet;
+  }
+  
+  .big {
+    font-size: 40px;
+  }
+  
+  .Cockpit button {
+    background-color: green;
+    font: inherit;
+    border: 1px solid black;
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .Cockpit button:hover {
+    background-color: lightgreen;
+  }
+  
+  .Cockpit button.Red {    /* wtf dit ken ik niet - iedere button die ook red als class heeft */
+    background-color: red;
+  }
+  
+  .Cockpit button.Red:hover {
+    background-color: coral;
+  } 
+  

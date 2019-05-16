@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Poes from './Poes';
+import Poes from './containers/Poes';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<Poes />, document.getElementById('root'));
+ReactDOM.render(<Poes boventitel="Cat manager"/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
