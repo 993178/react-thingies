@@ -13,11 +13,17 @@ const cockpit = (props) => {
     // Optie 3: tweede argument is array met dependencies, functie runt wanneer die worden geüpdatet en runt dan ook de clean-upfunctie (die lege returnfunctie)
 
     useEffect(() => {
-        console.log('cockpit useEffect');
-        return () => {
-            console.log('clean up')
+        console.log('cockpit useEffect');   // dit eerste stuk runt wanneer cockpit voor het eerst gerenderd wordt, ofwel bij het mounten
+        // hier zou je een http request doen
+        //const timer = setTimeout(() => {    // dus we zetten de wekker in een const zodat ie een naam heeft
+        setTimeout(() => {
+          alert('cockpit timer aan het werk, woehoe');
+        }, 1000);   // wekker brengt alert-boodschap na 1 seconde
+        return () => {  // dit stuk code runt bij het unmounten. Ofwel bij het verwijderen van de cockpit. Als je op dat knopje klikt.
+          //clearTimeout(timer);  // hierin wordt de wekker opgeruimd! Dus als je op de Remove cockpit-knop klikt voor de timer afgaat na 1 seconde, wordt ie geruimd zonder ooit af te gaan
+          console.log('clean up')
         };
-    }, [])
+    }, []);
 
     let btnClass = '';
     let classes = []    // join (verplaatst naar de h1 in de return) plakt de strings aan elkaar tot 1 string met (in dit geval) een spatie ertussen
