@@ -6,8 +6,8 @@ class Katten extends Component {
     // componentWillReceiveProps() {}                                   // verdwijnt
     shouldComponentUpdate(nextProps, nextState) { 
         console.log('katten.js shouldcomponentupdate');
-        if (nextProps.cats !== this.props.cats) {   // als state.katten veranderd is, updaten, anders niet. DiscountJonas merkt erbij op dat hier alleen de pointers worden vergeleken, niet het hele katten-object, en dit werkt alleen maar omdat hij bij de typeNameHandler en shoeAwayHandler een kopie maakt met de spread operator ipv de oorspronkelijke array te muteren
-            return true; 
+        if (nextProps.cats !== this.props.cats) {   // als state.katten veranderd is, updaten, anders niet. DiscountJonas merkt erbij op dat hier alleen de pointers worden vergeleken, niet het hele katten-object, en dit werkt alleen maar omdat hij bij de typeNameHandler en shoeAwayHandler een kopie maakt met de spread operator ipv de oorspronkelijke array te muteren. 
+            return true;
         } else {
             return false;
         }

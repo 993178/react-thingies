@@ -76,7 +76,8 @@ class Poes extends Component {
           {this.state.showCockpit ? <Cockpit                        // child components renderen is de vierde lifecycle-stap
             title={this.props.boventitel} // this omdat het een class is, props omdat deze dus bij index.js vandaan komt - weer een niveau hoger!
             catsAreThere={this.state.catsAreThere} 
-            cats={this.state.cats} 
+            //cats={this.state.cats}      // oude versie, niet zo specifiek
+            catsLength={this.state.cats.length}   // nieuwe specifieke versie, zodat de gememode Cockpit alleen wordt gererenderd als length verandert, niet als er iets anders in cats verandert
             toggleCatHandler={this.toggleCatHandler} /> : null}
           {cats}
         </div>

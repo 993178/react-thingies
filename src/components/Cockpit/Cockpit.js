@@ -32,10 +32,10 @@ const cockpit = (props) => {
         btnClass = cssImports.Red;  // cssloader geeft ons een string
     }
 
-    if (props.cats.length < 3) { // Discount Jonas heeft dit 'classes' veranderd in assignedClasses
+    if (props.catsLength < 3) { // Discount Jonas heeft dit 'classes' veranderd in assignedClasses
       classes.push(cssImports.paars);
     }
-    if (props.cats.length < 2) {
+    if (props.catsLength < 2) {
       classes.push(cssImports.big);
     }
 
@@ -49,4 +49,6 @@ const cockpit = (props) => {
     );
 };
 
-export default cockpit;
+export default React.memo(cockpit);  // memo-ding: React slaat een versie hiervan op, en alleen als er iets aan de input verandert (cats, toggleCatHandler, title), wordt Cockpit opnieuw gerenderd. Dit is dus de shouldComponentUpdate-versie van classloze componenten. 
+// React is niet zo snugger om zelf op te merken dat alleen cats.length wordt gebruikt, maar dat kun je omzeilen door de props preciezer door te geven: in Poes.js niet cats, maar catsLength.
+// Discount Jonas merkt op dat je ShoComUpd en memo alleen moet toepassen als een component, ehm, relatief los staat van de oudercomponent, zoals Katten niet hoeft te updaten als de Cockpit verandert of andersom. Maar als de oudercmponent updatet en het kind gebruikt eigenlijk dezelfde informatie, dan heeft zo'n check weinig zin
