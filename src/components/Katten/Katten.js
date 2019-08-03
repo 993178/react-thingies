@@ -1,18 +1,24 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Kat from './Kat/Kat';
 // de update lifecycle wordt in dit geval getriggerd door de naam van een kat te veranderen, waardoor de props veranderen en dus eea moet worden geüpdatet
-class Katten extends Component {
+class Katten extends PureComponent {
     // static getDerivedStateFromProps(props, state) { return state; }  // fase 1 van update lifecycle - (dit vindt React hier niet leuk, want er is geen initial state)
     // componentWillReceiveProps() {}                                   // verdwijnt
-    shouldComponentUpdate(nextProps, nextState) { 
-        console.log('katten.js shouldcomponentupdate');
-        if (nextProps.cats !== this.props.cats) {   // als state.katten veranderd is, updaten, anders niet. DiscountJonas merkt erbij op dat hier alleen de pointers worden vergeleken, niet het hele katten-object, en dit werkt alleen maar omdat hij bij de typeNameHandler en shoeAwayHandler een kopie maakt met de spread operator ipv de oorspronkelijke array te muteren. 
-            return true;
-        } else {
-            return false;
-        }
-    }     // fase 2 van update lifecycle - je MOET true of false retourneren (doorgaans als resultaat van een if), want hier kun je dus god spelen en React vertellen dat ie niet moet updaten. Potentieel een erg slecht plan, zie Bruce Almighty
+
+
+    // shouldComponentUpdate(nextProps, nextState) { 
+    //     console.log('katten.js shouldcomponentupdate');
+    //     if (nextProps.cats !== this.props.cats || nextProps.klik !== this.props.klik || nextProps.tik !== this.props.tik) {   // als state.katten veranderd is, updaten, anders niet. DiscountJonas merkt erbij op dat hier alleen de pointers worden vergeleken, niet het hele katten-object, en dit werkt alleen maar omdat hij bij de typeNameHandler en shoeAwayHandler een kopie maakt met de spread operator ipv de oorspronkelijke array te muteren. 
+    //         return true;                            // ^DiscountJonas voegt deze (klik en tik checks) toe voor de volledigheid
+    //     } else {
+    //         return false;
+    //     }
+    // }     // fase 2 van update lifecycle - je MOET true of false retourneren (doorgaans als resultaat van een if), want hier kun je dus god spelen en React vertellen dat ie niet moet updaten. Potentieel een erg slecht plan, zie Bruce Almighty
     
+    // Dit hele ShoComUpd waarin je álle props checkt, kun je ook vervangen door PureComponent: daar zit die ShoComUpd al ingebakken
+
+
+
     getSnapshotBeforeUpdate(prevProps, prevState) { 
         console.log('katten.js getsnapshotbeforeupdate');
         return { message: "snapshot" } ;
