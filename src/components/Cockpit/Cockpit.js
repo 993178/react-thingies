@@ -17,7 +17,7 @@ const cockpit = (props) => {
         // hier zou je een http request doen
         //const timer = setTimeout(() => {    // dus we zetten de wekker in een const zodat ie een naam heeft
         setTimeout(() => {
-          alert('cockpit timer aan het werk, woehoe');
+          console.log('cockpit timer aan het werk, woehoe');
         }, 1000);   // wekker brengt alert-boodschap na 1 seconde
         return () => {  // dit stuk code runt bij het unmounten. Ofwel bij het verwijderen van de cockpit. Als je op dat knopje klikt.
           //clearTimeout(timer);  // hierin wordt de wekker opgeruimd! Dus als je op de Remove cockpit-knop klikt voor de timer afgaat na 1 seconde, wordt ie geruimd zonder ooit af te gaan

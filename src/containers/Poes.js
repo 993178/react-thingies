@@ -7,6 +7,9 @@ import React, { Component } from 'react';
 import cssImports from './Poes.css';   // okeeeeej, dus... we hebben css-loader geconfigureerd in webpack.config.js, waardoor elke css-class nu als uniek ding wordt opgeslagen en alleen wordt toegepast op het js-bestand waarin je het importeert. Bij Discount Jonas heet dit classes
 import Katten from '../components/Katten/Katten'; // namen van componenten etc altijd met hoofdletter, kleine letters zijn voor de html-elementen
 import Cockpit from '../components/Cockpit/Cockpit';
+//import WithClass from '../hoc/WithClass';  // hoc-methode #1
+import withClass from '../hoc/withClass';    // hoc-methode #2
+import Aux from '../hoc/Aux';
 
 class Poes extends Component {
   state = {   // in oudere versies moet je eerst een constructor(props) toevoegen met daarin een super(props), en dan this.state = blablabla. Deze directere versie is korter en moderner. Maar constructor is dus de eerste lifecycle stap
@@ -17,7 +20,8 @@ class Poes extends Component {
     ],
     ourCat: { name: 'Emma', status: 'murdered a bird today...'},
     catsAreThere: false,
-    showCockpit: true
+    showCockpit: true,
+    counter: 0
   }
 
   //static getDerivedStateFromProps(state, props) { return state; }     // zeldzame tweede stap in de lifecycle voor het geval je meteen al moet checken of props en state nog uptodate zijn...
@@ -51,7 +55,17 @@ class Poes extends Component {
     const cats = [...this.state.cats];
     cats[catIndex] = cat;
 
-    this.setState({cats: cats})
+    // this.setState({    // als je geen vorige versies nodig hebt, is setState met alleen een object prima 
+    //   cats: cats, 
+    //   counter: this.state.counter +1  // FOUT  In zo'n klein appje als dit werkt het wel, maar in een grote app kun je er niet op rekenen dat zo'n state.counter écht de meest recente vorige versie was, de app kan elders tegelijkertijd ook aan het setStaten zijn, waardoor deze state.counter niet de laatste versie is (en counter dus niet genoeg erbij telt)
+    // })
+
+    this.setState((prevState, props) => {   // als je wél vorige versies nodig hebt, gooi je er een functie in, met vorigeversie en props als argumenten
+      return {
+        cats: cats,
+        counter: prevState.counter +1
+      };
+    });
   }
 
   shooAwayHandler = (el) => {
@@ -71,7 +85,8 @@ class Poes extends Component {
     }
 
     return (
-        <div className={cssImports.Poes}>
+        //<WithClass cssstuff={cssImports.Poes}>   // Methode #1 voor een hoc: waarbij het te returnen component wordt gewrapt met de hoc
+        <Aux>
           <button onClick={() => {this.setState({showCockpit: false})}} >Remove cockpit</button> {/* quick and dirty manier om even een functie erin te gooien */}
           {this.state.showCockpit ? <Cockpit                        // child components renderen is de vierde lifecycle-stap
             title={this.props.boventitel} // this omdat het een class is, props omdat deze dus bij index.js vandaan komt - weer een niveau hoger!
@@ -80,12 +95,15 @@ class Poes extends Component {
             catsLength={this.state.cats.length}   // nieuwe specifieke versie, zodat de gememode Cockpit alleen wordt gererenderd als length verandert, niet als er iets anders in cats verandert
             toggleCatHandler={this.toggleCatHandler} /> : null}
           {cats}
-        </div>
+        </Aux>
+        // Methode #2 voor hoc is met Aux, en dan...
+        //</WithClass>
     );
   }
 }
 
-export default Poes;
+//export default Poes;    // hoc-methode #1
+export default withClass(Poes, cssImports.Poes);  // hoc-methode #2
 
 
 

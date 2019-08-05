@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from 'react';       // ipv gewone Component, zie regel 18
 import Kat from './Kat/Kat';
 // de update lifecycle wordt in dit geval getriggerd door de naam van een kat te veranderen, waardoor de props veranderen en dus eea moet worden geüpdatet
 class Katten extends PureComponent {
