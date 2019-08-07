@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';       // ipv gewone Component, zie regel 18
 import Kat from './Kat/Kat';
+
 // de update lifecycle wordt in dit geval getriggerd door de naam van een kat te veranderen, waardoor de props veranderen en dus eea moet worden geüpdatet
 class Katten extends PureComponent {
     // static getDerivedStateFromProps(props, state) { return state; }  // fase 1 van update lifecycle - (dit vindt React hier niet leuk, want er is geen initial state)
@@ -31,14 +32,15 @@ class Katten extends PureComponent {
     // componentWillUnmount                                             // waarin je code zet die hier runt en meteen erna verwijderd wordt, als ik het goed begrijp
 
     render() {                                                          // fase 4 van update lifecycle
-        return this.props.cats.map((cat, index) => {
-            return <Kat
-                      key={cat.id}
-                      name={cat.name} 
-                      status={cat.status} 
-                      klik={() => this.props.shoo(index)}
-                      tik={(event) => this.props.typed(event, cat.id)}  />
-          }); // als return statement op 1 regel past (wat kennelijk niet inhoudt dat het niet letterlijk op meerdere regels mag staan maar dat je het op dezelfde regel begint...), dan kun je het woord 'return' weglaten
+        return (this.props.cats.map((cat, index) => {
+                return (
+                    <Kat key={cat.id}
+                        name={cat.name} 
+                        status={cat.status} 
+                        klik={() => this.props.shoo(index)}
+                        tik={(event) => this.props.typed(event, cat.id)} />
+                );
+        })); // als return statement op 1 regel past (wat kennelijk niet inhoudt dat het niet letterlijk op meerdere regels mag staan maar dat je het op dezelfde regel begint...), dan kun je het woord 'return' weglaten
     }
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';     // werkt in zowel class- als niet-class components
 
 import Aux from '../../../hoc/Aux';
+import AuthContext from '../../../context/auth-context';
 import withClass from '../../../hoc/withClass';
 import cssImports from './Kat.css';     // in webpack.config.js > het was iets met cssReget? en test en webloader geloof ik. En 64.5.
 
@@ -12,17 +13,34 @@ class Kat extends Component {
     // }
     // ...dan focust ie nu op die zwarte, omdat doc.qsel gewoon het eerste pakt wat ie kan vinden dat aan de beschrijving ('input') voldoet, en hij kijkt gewoon naar de hele DOM/pagina, niet naar wat er als laatst is gerenderd
     // Wat wel werkt, is ref gebruiken op het bedoelde html/JSX-element en dan dit uithalen:
-    componentDidMount() {
-        this.invoerVeld.focus();
-    }   // in tegenstelling tot document.querySelector kiest React hier dus niet het eerste beste ref dat ie op de pagina kan vinden... maar kennelijk de laatste die gerenderd werd? Discount Jonas zegt dat eigenlijk niet specifiek.
+    // componentDidMount() {       // ref-methode #1
+    //     this.invoerVeld.focus();
+    // }   // in tegenstelling tot document.querySelector kiest React hier dus niet het eerste beste ref dat ie op de pagina kan vinden... maar kennelijk de laatste die gerenderd werd? Discount Jonas zegt dat eigenlijk niet specifiek.
+
+    constructor(props) {        // ref-methode #2 (vanaf React 16.3). Waarin je eerst een prop maakt en die gelijktstelt aan een reactmethode createRef (da's een object...), die prop in de render invult met waar de ref naar verwijst, en dan in ComDidMount die focus erop pleurt. Het is vast ergens goed voor maar hier is het superomslachtig
+        super(props)
+        this.invoerVeldRef = React.createRef();
+    }
+
+    static contextType = AuthContext;   // static zodat je er van buitenaf bij kan (?). React 16.6 en class-only: zodat je de info in je context niet alleen via het <consumer>ding bij je JSX kunt gebruiken, maar ook in bijvoorbeeld ComponentDidMount. Dat contextType is een verplichte term. <-- = 'setting up a static property'. Alrighty then.
+
+    componentDidMount() {       // ref-methode #2
+        this.invoerVeldRef.current.focus();     // en de current is verplicht, want... je wilt het element waar de ref currently naar verwijst, denk ik. 
+        console.log(this.context.authenticated) // zo kun je bij je contextobject dat we via contextType = AuthContext toegankelijk hebben gemaakt
+    }
 
     render() {
         return (
             <Aux>
-                <p onClick={this.props.klik}>{this.props.name} is a  neighborhood tomcat and {this.props.status}.</p>
+                {/* <AuthContext.Consumer>   // Deze methode werkt in components met en zonder class
+                    {(context) => context.authenticated ? <p>Kat is okee</p> : <p>Kat moet inloggen lol</p>}
+                </AuthContext.Consumer> */}
+                    {this.context.authenticated ? <p>Kat is okee</p> : <p>Kat moet inloggen lol</p>  /* deze kortere methode werkt alleen in class components */ }
+                <p onClick={this.props.klik}>{this.props.name} is a neighborhood tomcat and {this.props.status}.</p>
                 <p >{this.props.children}</p>
                 <input 
-                ref={(invoerv) => {this.invoerVeld = invoerv}} // ref is... React's manier van ergens een stickertje op plakken als verwijzing, met het element waar je ref op zet als parameter in de functie. In dit geval maken we van dit specifieke invoerveld een globale prop, zodat we hem elders kunnen gebruiken. Bijvoorbeeld hierboven in componentDidMount.
+                //ref={(invoerv) => {this.invoerVeld = invoerv}} // ref-methode #1 ref is... React's manier van ergens een stickertje op plakken als verwijzing, met het element waar je ref op zet als parameter in de functie. In dit geval maken we van dit specifieke invoerveld een globale prop, zodat we hem elders kunnen gebruiken. Bijvoorbeeld hierboven in componentDidMount.
+                ref={this.invoerVeldRef}                         // ref-methode #2
                 type='text' 
                 onChange={this.props.tik} 
                 value={this.props.name}/>

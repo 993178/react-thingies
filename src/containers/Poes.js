@@ -10,6 +10,7 @@ import Cockpit from '../components/Cockpit/Cockpit';
 //import WithClass from '../hoc/WithClass';  // hoc-methode #1
 import withClass from '../hoc/withClass';    // hoc-methode #2
 import Aux from '../hoc/Aux';
+import AuthContext from '../context/auth-context';
 
 class Poes extends Component {
   state = {   // in oudere versies moet je eerst een constructor(props) toevoegen met daarin een super(props), en dan this.state = blablabla. Deze directere versie is korter en moderner. Maar constructor is dus de eerste lifecycle stap
@@ -21,7 +22,8 @@ class Poes extends Component {
     ourCat: { name: 'Emma', status: 'murdered a bird today...'},
     catsAreThere: false,
     showCockpit: true,
-    counter: 0
+    counter: 0,
+    authenticated: false,
   }
 
   //static getDerivedStateFromProps(state, props) { return state; }     // zeldzame tweede stap in de lifecycle voor het geval je meteen al moet checken of props en state nog uptodate zijn...
@@ -74,6 +76,10 @@ class Poes extends Component {
     this.setState({cats: cats});
   }
 
+  loginHandler = () => {
+    this.setState({authenticated: true})
+  }
+
   render() {    // derde lifecycle-stap
     let cats = null;    // optie 2 van conditionele elementen: je maakt een variabele die je rendert, en verandert die hier evt met een if
 
@@ -81,20 +87,30 @@ class Poes extends Component {
       cats = <Katten 
             cats={this.state.cats} 
             shoo={this.shooAwayHandler} 
-            typed={this.typeNameHandler} />;
+            typed={this.typeNameHandler}
+            isAuthenticated={this.state.authenticated} />;
     }
 
     return (
         //<WithClass cssstuff={cssImports.Poes}>   // Methode #1 voor een hoc: waarbij het te returnen component wordt gewrapt met de hoc
         <Aux>
-          <button onClick={() => {this.setState({showCockpit: false})}} >Remove cockpit</button> {/* quick and dirty manier om even een functie erin te gooien */}
-          {this.state.showCockpit ? <Cockpit                        // child components renderen is de vierde lifecycle-stap
-            title={this.props.boventitel} // this omdat het een class is, props omdat deze dus bij index.js vandaan komt - weer een niveau hoger!
-            catsAreThere={this.state.catsAreThere} 
-            //cats={this.state.cats}      // oude versie, niet zo specifiek
-            catsLength={this.state.cats.length}   // nieuwe specifieke versie, zodat de gememode Cockpit alleen wordt gererenderd als length verandert, niet als er iets anders in cats verandert
-            toggleCatHandler={this.toggleCatHandler} /> : null}
-          {cats}
+          <button 
+            onClick={() => {
+              this.setState({showCockpit: false})
+              }} >
+              Remove cockpit
+          </button> {/* quick and dirty manier om even een functie erin te gooien */}
+
+          <AuthContext.Provider value={{authenticated: this.state.authenticated, login: this.loginHandler}} /* deze wrap je om de componenten die er toegang toe nodig hebben, in dit geval Cockpit en  */ >
+            {this.state.showCockpit ? <Cockpit                        // child components renderen is de vierde lifecycle-stap
+              title={this.props.boventitel} // this omdat het een class is, props omdat deze dus bij index.js vandaan komt - weer een niveau hoger!
+              catsAreThere={this.state.catsAreThere} 
+              //cats={this.state.cats}      // oude versie, niet zo specifiek
+              catsLength={this.state.cats.length}   // nieuwe specifieke versie, zodat de gememode Cockpit alleen wordt gererenderd als length verandert, niet als er iets anders in cats verandert
+              toggleCatHandler={this.toggleCatHandler} 
+              /> : null}
+            {cats}
+          </AuthContext.Provider>
         </Aux>
         // Methode #2 voor hoc is met Aux, en dan...
         //</WithClass>
