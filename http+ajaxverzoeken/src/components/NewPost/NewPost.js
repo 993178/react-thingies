@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import './NewPost.css';
 
@@ -6,7 +7,19 @@ class NewPost extends Component {
     state = {
         title: '',
         content: '',
-        author: 'Max'
+        author: 'Discount Jonas'
+    }
+
+    postDataHandler = () => {
+        const post = {
+            title: this.state.title,
+            body: this.state.content,
+            author: this.state.author
+        }
+        axios.post('https://jsonplaceholder.typicode.com/posts', post)    // normaalgesproken is dat niet dezelfde link... Tweede argument is de data die we willen opsturen en eerst in state en dan in const post gooien. Dat hele ding wordt automatisch in een json-string omgezet door axios. Aardig van ze lol
+            .then(response => {
+                console.log(response);
+            })
     }
 
     render () {
@@ -20,9 +33,9 @@ class NewPost extends Component {
                 <label>Author</label>
                 <select value={this.state.author} onChange={(event) => this.setState({author: event.target.value})}>
                     <option value="Max">Max</option>
-                    <option value="Manu">Manu</option>
+                    <option value="Jonas">Jonas</option>
                 </select>
-                <button>Add Post</button>
+                <button onClick={this.postDataHandler} >Add Post</button>
             </div>
         );
     }
