@@ -4,15 +4,9 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.0",
-<<<<<<< HEAD
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
-=======
-    "react": "^16.0.0",
-    "react-dom": "^16.0.1",
-    "react-scripts": "1.0.13"
->>>>>>> ef6bc1a9eae5754444357f0a7352915bb501cf70
   },
   "scripts": {
     "start": "react-scripts start",
