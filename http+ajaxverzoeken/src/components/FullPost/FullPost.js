@@ -11,7 +11,7 @@ class FullPost extends Component {
     componentDidUpdate() {
         if (this.props.id) {
             if ( !this.state.loadedPost || this.state.loadedPost.id !== this.props.id) {  // om de loop te voorkomen een extra if: we willen alleen de request indienen als er 1) !niks is geladen of als 2) dat wat er is geladen niet dezelfde post.id is als de nieuwe props.id
-                axios.get('https://jsonplaceholder.typicode.com/posts/'+ this.props.id)
+                axios.get('/posts/'+ this.props.id)
                     .then(response => {
                         //console.log(response);  //niet meer nodig, maar wel handig om te zien dat er een loop is ontstaan!
                         this.setState({ loadedPost: response.data });   // setState in CompddUp! setState triggert een rerender, dus daarna is de component geüpdatet en loopt deze compddup dus ook weer, etc.
@@ -21,7 +21,7 @@ class FullPost extends Component {
     }
 
     deletePostHandler = () => {
-        axios.delete('https://jsonplaceholder.typicode.com/posts/'+ this.props.id)
+        axios.delete('/posts/'+ this.props.id)
             .then(response => {
                 console.log(response);
             })

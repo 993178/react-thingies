@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import axios from '../../axios';  // dit is dus instance! 
+// nu gebruiken we specifieke instance-axios settings voor blog, en nog de defaults in index.js voor de rest. Bij het laden van Blog zien we ook niet langer de request logs van de interceptors in index.js
 
 import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
@@ -14,7 +16,7 @@ class Blog extends Component {
     }
 
     componentDidMount() {
-        axios.get('https://jsonplaceholder.typicode.com/posts')     // axios om je get en post requests mee te doen (ik vind dit als introductie tot promises zo veel duidelijker dan dat gedoe met timers... serieus...). Die link is dummydata om mee te oefenen :-)
+        axios.get('/posts')     // axios om je get en post requests mee te doen (ik vind dit als introductie tot promises zo veel duidelijker dan dat gedoe met timers... serieus...). Die link is dummydata om mee te oefenen :-)
             .then(response => {
                 const posts = response.data.slice(0, 4);        // Discount Jonas houdt niet zo van een hele pagina vol data/zoekresultaten/posts. Dus hij neemt de responses.data en slaat alleen de eerste 4 op om te renderen...
                 const updatedPosts = posts.map(post => {        // onze dummy backend, omdat we geen server hebben, als ik het goed heb begrepen
