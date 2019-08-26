@@ -1,6 +1,9 @@
 import React from 'react';
+// import { withRouter } from 'react-router-dom';
+
 
 import './Post.css';
+import Posts from '../../containers/Blog/Posts/Posts';
 
 const post = (props) => (
     <article className="Post" onClick={props.clicked} >
@@ -11,4 +14,5 @@ const post = (props) => (
     </article>
 );
 
-export default post;
+//export default withRouter(post);  // deze hoc is om de render-gerelateerde props die we in Posts krijgen over de route, ook hier weer door te geven in de export
+export default Posts;

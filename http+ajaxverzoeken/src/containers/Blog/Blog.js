@@ -1,67 +1,42 @@
 import React, { Component } from 'react';
-//import axios from 'axios';
-import axios from '../../axios';  // dit is dus instance! 
-// nu gebruiken we specifieke instance-axios settings voor blog, en nog de defaults in index.js voor de rest. Bij het laden van Blog zien we ook niet langer de request logs van de interceptors in index.js
+import { Route, Link } from 'react-router-dom'; // Link is ipv <a>, omdat als je gewone a's gebruikt voor je links in de header, er een request wordt gestuurd en de pagina dus opnieuw laadt, en dat wil je niet want dan ben je je state ook kwijt
 
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
 import './Blog.css';
+import Posts from './Posts/Posts';
+import NewPost from './NewPost/NewPost'
 
 class Blog extends Component {
     state = {
-        posts: [],
         selectedPostId: null, 
         error: false
     }
 
-    componentDidMount() {
-        axios.get('/posts')     // axios om je get en post requests mee te doen (ik vind dit als introductie tot promises zo veel duidelijker dan dat gedoe met timers... serieus...). Die link is dummydata om mee te oefenen :-)
-            .then(response => {
-                const posts = response.data.slice(0, 4);        // Discount Jonas houdt niet zo van een hele pagina vol data/zoekresultaten/posts. Dus hij neemt de responses.data en slaat alleen de eerste 4 op om te renderen...
-                const updatedPosts = posts.map(post => {        // onze dummy backend, omdat we geen server hebben, als ik het goed heb begrepen
-                    return {...post,
-                    author: 'Discount Jonas'
-                    }
-                })
-                this.setState({ posts: updatedPosts })      // dus hier nog maar 4 posts :-/
-                console.log(response.data);
-            }).catch(error => {
-                this.setState({error: true})
-            });
-    }
-
-    postSelectedHandler = (id) => {
-        this.setState({ selectedPostId: id })
-    }
-
     render () {
-        let posts = <p style={{textAlign: "center"}}>Something FAILED</p>
-
-        if (!this.state.error) {
-            posts = this.state.posts.map(post => {
-            return <Post 
-                        title={post.title} 
-                        author={post.author} 
-                        key={post.id} clicked={() => this.postSelectedHandler(post.id)} /* met dus een arrowfunctie erin, omdat je dan een argument kunt doorgeven */ 
-                    />
-            })
-        }
-
         return (
-            <div>
-                <section className="Posts">
-                    {posts}
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostId} />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
+            <div className="Blog">
+                <header>
+                    <nav>
+                        <ul>
+                            <li><Link to="/">Home</Link></li> {/* Simpelste voorbeeld van to is een string als "/" zoals een href ook zou hebben. Maar je kunt ook een JS-object doorgeven met pairs als pathname: '/new-post' voor de basis van de link, hash: '#submit' voor specifieke punten op die pagina (zoals subkoppen in Wikipedia), of search: '?quick-submit=true' voor zoekopdrachten */}
+                            <li><Link to="/new-post">New post</Link></li> {/* zo'n path in to is standaard absoluut: het wordt altijd achter de domeinnaam geplakt. Wil je een relatief path, met het path-stukje vastgeplakt aan je huidige locatie, dan gebruik je: pathname: this.props.match.url + '/rest-van-link' */}
+                        </ul>
+                    </nav>
+                </header>
+                <Route path="/" exact component={Posts} /> {/* het path is de link waar we heen willen, en omdat alle andere links ook met / beginnen willen we exact (=boolean) deze. Zonder exact kun je bv handmatig dingen toevoegen aan je link en nog steeds op de pagina belanden die met het originele stuk begint, maar dan weet de browser wel dat het geen exacte match was. Je kunt meerdere Routes onder elkaar zetten, ook met hetzelfde path; Route is een soort if (path) {wat je eigenlijk wilt renderen}.  Een niet-component-specifieke mogelijkheid is render={() => <h1>ik hier?</h1> Render neemt een arrowfunctie en ipv function body kun je JSX invoeren.  */}
+                <Route path="/new-post" component={NewPost} /> {/* zo'n gerenderde component krijgt een zootje props mee, waaronder history, match etc */}
             </div>
         );
     }
 }
 
 export default Blog;
+
+/*
+
+                <section>
+                    <FullPost id={this.state.selectedPostId} />
+                </section>
+                <section>
+                    <NewPost />
+                </section>
+*/
