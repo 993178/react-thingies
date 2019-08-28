@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './Posts.css';
 import Post from '../../../components/Post/Post';
@@ -38,11 +38,11 @@ class Posts extends Component {
 
         if (!this.state.error) {
             posts = this.state.posts.map(post => {
-            return <Post 
+            return <Link to={'/' + post.id} key={post.id}><Post 
                         title={post.title} 
                         author={post.author /* een manier om de props zoals isMatch etc van de Link door te geven is {...this.props}, of natuurlijk specifieke props, maar het kan ook met een hoc genaamd withRouter, zie Post.js */}
-                        key={post.id} clicked={() => this.postSelectedHandler(post.id)} /* met dus een arrowfunctie erin, omdat je dan een argument kunt doorgeven */ 
-                    />
+                        clicked={() => this.postSelectedHandler(post.id)} /* met dus een arrowfunctie erin, omdat je dan een argument kunt doorgeven */ 
+                    /></Link>
             })
         }
     

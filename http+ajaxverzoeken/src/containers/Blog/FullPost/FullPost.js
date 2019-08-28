@@ -8,10 +8,10 @@ class FullPost extends Component {
         loadedPost: null
     }
 
-    componentDidUpdate() {
-        if (this.props.id) {
-            if ( !this.state.loadedPost || this.state.loadedPost.id !== this.props.id) {  // om de loop te voorkomen een extra if: we willen alleen de request indienen als er 1) !niks is geladen of als 2) dat wat er is geladen niet dezelfde post.id is als de nieuwe props.id
-                axios.get('/posts/'+ this.props.id)
+    componentDidMount() {   // Mount ipv Update omdat hij niet hoeft te updaten, dus dit moet meteen de eerste keer gebeuren
+        if (this.props.match.params.id) {       // dit wordt doorgegeven via de :id in de path-property van de <Route> in Blog.js...!
+            if ( !this.state.loadedPost || this.state.loadedPost.id !== this.props.match.params.id) {  // om de loop te voorkomen een extra if: we willen alleen de request indienen als er 1) !niks is geladen of als 2) dat wat er is geladen niet dezelfde post.id is als de nieuwe props.id
+                axios.get('/posts/'+ this.props.match.params.id)
                     .then(response => {
                         //console.log(response);  //niet meer nodig, maar wel handig om te zien dat er een loop is ontstaan!
                         this.setState({ loadedPost: response.data });   // setState in CompddUp! setState triggert een rerender, dus daarna is de component geüpdatet en loopt deze compddup dus ook weer, etc.

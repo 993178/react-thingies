@@ -15,4 +15,4 @@ const post = (props) => (
 );
 
 //export default withRouter(post);  // deze hoc is om de render-gerelateerde props die we in Posts krijgen over de route, ook hier weer door te geven in de export
-export default Posts;
+export default Posts;   // Meervoud - waarom was dit ook alweer? 
