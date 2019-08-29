@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import './Posts.css';
 import Post from '../../../components/Post/Post';
@@ -30,7 +30,8 @@ class Posts extends Component {
     }
 
     postSelectedHandler = (id) => {
-        this.setState({ selectedPostId: id })
+        // this.setState({ selectedPostId: id })
+        this.props.history.push({ pathname: '/' + id });    // zelfde als to="/" + post.id maar met propsmethode. In de methode kun je ook nog push('/' + id) doen > deze manier is 'programmatically', meestal gedaan na een ander proces is afgerond
     }
 
     render() {
@@ -38,14 +39,18 @@ class Posts extends Component {
 
         if (!this.state.error) {
             posts = this.state.posts.map(post => {
-            return <Link to={'/' + post.id} key={post.id}><Post 
-                        title={post.title} 
-                        author={post.author /* een manier om de props zoals isMatch etc van de Link door te geven is {...this.props}, of natuurlijk specifieke props, maar het kan ook met een hoc genaamd withRouter, zie Post.js */}
-                        clicked={() => this.postSelectedHandler(post.id)} /* met dus een arrowfunctie erin, omdat je dan een argument kunt doorgeven */ 
-                    /></Link>
+                return (
+                    // <Link to={'/' + post.id} key={post.id}>      // Link is een methode om een link aan te brengen, denk erom dat in zo'n .map de key altijd op het buitenste element moet zitten
+                        <Post 
+                            title={post.title} 
+                            key={post.id}
+                            author={post.author /* een manier om de props zoals isMatch etc van de Link door te geven is {...this.props}, of natuurlijk specifieke props, maar het kan ook met een hoc genaamd withRouter, zie Post.js */}
+                            clicked={() => this.postSelectedHandler(post.id)} /* met dus een arrowfunctie erin, omdat je dan een argument kunt doorgeven */ />
+                    // </Link>
+                )
             })
         }
-    
+
         return (
             <section className="Posts">
                 {posts}
