@@ -6,7 +6,7 @@ import { Route, NavLink, Switch } from 'react-router-dom'; // Link is ipv <a>, o
 import './Blog.css';
 import Posts from './Posts/Posts';
 import NewPost from './NewPost/NewPost';
-import FullPost from './FullPost/FullPost';
+// import FullPost from './FullPost/FullPost';
 
 class Blog extends Component {
     state = {
@@ -20,15 +20,16 @@ class Blog extends Component {
                 <header>
                     <nav>
                         <ul>
-                            <li><NavLink to="/" exact>Posts</NavLink></li> {/* Simpelste voorbeeld van to is een string als "/" zoals een href ook zou hebben. Maar je kunt ook een JS-object doorgeven met pairs als pathname: '/new-post' voor de basis van de link, hash: '#submit' voor specifieke punten op die pagina (zoals subkoppen in Wikipedia), of search: '?quick-submit=true' voor zoekopdrachten. Er moet ook een exact bij, anders slaat de styling op alles dat met / begint. Discount Jonas merkt op dat je deze basislink niet apart kunt stylen als je zou willen dat deze bv ook active is als je op een FullPost bent. Dat los je dan op door er /posts van te maken */}
+                            <li><NavLink to="/posts" exact>Posts</NavLink></li> {/* Simpelste voorbeeld van to is een string als "/" zoals een href ook zou hebben. Maar je kunt ook een JS-object doorgeven met pairs als pathname: '/new-post' voor de basis van de link, hash: '#submit' voor specifieke punten op die pagina (zoals subkoppen in Wikipedia), of search: '?quick-submit=true' voor zoekopdrachten. Er moet ook een exact bij, anders slaat de styling op alles dat met / begint. Discount Jonas merkt op dat je deze basislink niet apart kunt stylen als je zou willen dat deze bv ook active is als je op een FullPost bent. Dat los je dan op door er /posts van te maken */}
                             <li><NavLink to="/new-post">New post</NavLink></li> {/* zo'n path in to is standaard absoluut: het wordt altijd achter de domeinnaam geplakt. Wil je een relatief path, met het path-stukje vastgeplakt aan je huidige locatie, dan gebruik je: pathname: this.props.match.url + '/rest-van-link' */}
                         </ul>
                     </nav>
                 </header>
                 <Switch>
-                    <Route path="/" exact component={Posts} /> {/* het path is de link waar we heen willen, en omdat alle andere links ook met / beginnen willen we exact (=boolean) deze. Zonder exact kun je bv handmatig dingen toevoegen aan je link en nog steeds op de pagina belanden die met het originele stuk begint, maar dan weet de browser wel dat het geen exacte match was. Je kunt meerdere Routes onder elkaar zetten, ook met hetzelfde path; Route is een soort if (path) {wat je eigenlijk wilt renderen}.  Een niet-component-specifieke mogelijkheid is render={() => <h1>ik hier?</h1> Render neemt een arrowfunctie en ipv function body kun je JSX invoeren.  */}
+                    {/*<Route path="/" exact component={Posts} />  het path is de link waar we heen willen, en omdat alle andere links ook met / beginnen willen we exact (=boolean) deze. Zonder exact kun je bv handmatig dingen toevoegen aan je link en nog steeds op de pagina belanden die met het originele stuk begint, maar dan weet de browser wel dat het geen exacte match was. Je kunt meerdere Routes onder elkaar zetten, ook met hetzelfde path; Route is een soort if (path) {wat je eigenlijk wilt renderen}.  Een niet-component-specifieke mogelijkheid is render={() => <h1>ik hier?</h1> Render neemt een arrowfunctie en ipv function body kun je JSX invoeren.  */}
                     <Route path="/new-post" component={NewPost} /> {/* zo'n gerenderde component krijgt een zootje props mee, waaronder history, match etc */}
-                    <Route path="/:id" exact component={FullPost} /> {/* met dynamische link, die :id is zoiets als {id}. Dat betekent wel dat alle absolute links die met hetzelfde stuk beginnen eerst moeten komen, anders denkt de browser dat NewPost ook een FullPost is */}
+                    {/* <Route path="/:id" exact component={FullPost} /> met dynamische link, die :id is zoiets als {id}. Dat betekent wel dat alle absolute links die met hetzelfde stuk beginnen eerst moeten komen, anders denkt de browser dat NewPost ook een FullPost is */}
+                    <Route path="/posts" component={Posts} /> {/* nieuwe plek onderaan voor '/' ZONDER exact, omdat anders Posts niet geladen wordt nu die ook FullPost laadt met een niet-exact path, namelijk '/:id'. Met deze volgorde wordt eerst NewPost eruit gefilterd en voorkomt Switch dat '/' óók wordt gerenderd voor NewPost omdat die ook aan het request voldoet. Ennn nog weer later maken we er '/posts' van */}
                 </Switch>
             </div>
         );
