@@ -12,7 +12,7 @@ axios.defaults.headers.common['Authorization'] = "EEN OF ANDER TOKEN"; // iedere
 axios.defaults.headers.post['Content-Type'] = 'application/json'; // standaard setting, maar om te laten zien dat zo'n header ook specifiek voor POST requests kan zijn
 
 axios.interceptors.request.use(request => {     // zo'n interceptor kun je gebruiken als je errors in de hele app op dezelfde manier en plek wilt managen, bv voor álle http requests
-    console.log(request);   // feitelijk is alles wat je doet een request, ook het starten van de app, op dingen klikken, dingen intypen - alles. Die zou je hier ook allemaal kunnen configureren voor het returnen
+    //console.log(request);   // feitelijk is alles wat je doet een request, ook het starten van de app, op dingen klikken, dingen intypen - alles. Die zou je hier ook allemaal kunnen configureren voor het returnen
     return request;     // het is eigenlijk request config... ? ... maar iig moet je hem altijd returnen
 }, error => {           // de error handling gaat apart als tweede functie
     console.log(error); // je zou bv je errors kunnen bijhouden in een logfile ofzo
@@ -20,7 +20,7 @@ axios.interceptors.request.use(request => {     // zo'n interceptor kun je gebru
 })  
 // maar: dit^ gaat alleen over de aanvraag; wat daarmee moet gebeuren en wat daarmee mis is (bv als je geen internet hebt). Als er iets moet gebeuren of mis is met het antwoord:
 axios.interceptors.response.use(response => {
-    console.log(response);
+    //console.log(response);
     return response;
 }, error => {       // zo'n error krijg je bij een fout http adres
     console.log(error);
